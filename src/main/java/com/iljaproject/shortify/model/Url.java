@@ -1,6 +1,7 @@
 package com.iljaproject.shortify.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Url {
 
@@ -75,5 +76,17 @@ public class Url {
 
     public void setClickCount(Long clickCount) {
         this.clickCount = clickCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Url url = (Url) o;
+        return Objects.equals(id, url.id) && Objects.equals(originalUrl, url.originalUrl) && Objects.equals(shortCode, url.shortCode) && Objects.equals(createdAt, url.createdAt) && Objects.equals(lastAccessed, url.lastAccessed) && Objects.equals(clickCount, url.clickCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, originalUrl, shortCode, createdAt, lastAccessed, clickCount);
     }
 }
