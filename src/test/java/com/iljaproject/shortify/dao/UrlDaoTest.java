@@ -1,6 +1,7 @@
 package com.iljaproject.shortify.dao;
 
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
+import com.iljaproject.shortify.dto.CreateUrlDto;
 import com.iljaproject.shortify.model.Url;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,17 @@ class UrlDaoTest {
 
         // Then
         assertEquals(expectedUrls, fetchedUrls);
+    }
+
+    @Test
+    void url_createUrl_testDbWithInsertedUrl() {
+        // Given
+        CreateUrlDto urlDto = new CreateUrlDto("https://longurl.com", "short");
+
+        // When
+        urlDao.createUrl(urlDto);
+        List<Url> updatedUrls = urlDao.getUrls();
+        assertEquals(3, updatedUrls.size());
     }
 
 }
