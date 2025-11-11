@@ -7,5 +7,9 @@ public class UrlDaoSqlQueries {
                 INSERT INTO urls (original_url, short_code, created_at)
                 VALUES(?, ?, ?)
                 """;
-
+    public static final String GET_URL_BY_ID_SQL_QUERY = """
+            SELECT * FROM urls
+            WHERE id = ?
+            LIMIT 1;
+            """;
 }

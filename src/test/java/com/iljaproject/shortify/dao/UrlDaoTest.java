@@ -14,9 +14,9 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -28,10 +28,11 @@ class UrlDaoTest {
     @Autowired
     private UrlDaoImpl urlDao;
     private List<Url> expectedUrls;
+    private Url first;
 
     @BeforeEach
     void setUp() {
-        Url first = new Url(
+        first = new Url(
                 1L,
                 "https://example.com",
                 "exmpl",
@@ -51,7 +52,7 @@ class UrlDaoTest {
     }
 
     @Test
-    void testDbWithUrls_getUrls_expectedUrls() {
+    void testDbWithUrls_getUrls_returnExpectedUrls() {
         // Given / When
         List<Url> fetchedUrls = urlDao.getUrls();
 
@@ -83,5 +84,26 @@ class UrlDaoTest {
 
         // Then
         assertEquals("Short code already exists: smth", e.getMessage());
+    }
+
+    @Test
+    void correctId_getById_returnExpectedUrl() {
+        // Given / When
+        Optional<Url> fetchedUrl = urlDao.getUrlById(1L);
+
+        // Then
+        assertTrue(fetchedUrl.isPresent());
+        assertEquals(first, fetchedUrl.get());
+
+    }
+
+    @Test
+    void nonExistingId_getById_returnOptionalEmpty() {
+        // Given / When
+        Optional<Url> fetchedUrl = urlDao.getUrlById(10L);
+
+        // Then
+        assertTrue(fetchedUrl.isEmpty());
+
     }
 }

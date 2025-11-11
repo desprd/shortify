@@ -12,15 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UrlDaoImpl implements UrlDao {
-    // TODO correct logging and exception handling
     private final Logger logger = LoggerFactory.getLogger(UrlDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final UrlRowMapper urlRowMapper;
@@ -48,8 +49,19 @@ public class UrlDaoImpl implements UrlDao {
     }
 
     @Override
-    public Url getUrlById(Long id) {
-        return null;
+    public Optional<Url> getUrlById(Long id) {
+        try {
+            Url fetchedUrl = jdbcTemplate.queryForObject(
+              UrlDaoSqlQueries.GET_URL_BY_ID_SQL_QUERY,
+              urlRowMapper,
+              id
+            );
+            return Optional.ofNullable(fetchedUrl);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        } catch (DataAccessException e) {
+            throw new FailedToReadFromDatabaseException("Failed to read url by id " + id, e);
+        }
     }
 
     @Override
