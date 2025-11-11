@@ -18,7 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/data-test.sql")
+@Sql(
+        scripts = {"/cleanup-data-test.sql", "/data-test.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
 class UrlDaoTest {
     @Autowired
     private UrlDaoImpl urlDao;
