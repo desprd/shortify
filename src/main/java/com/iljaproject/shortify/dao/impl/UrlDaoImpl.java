@@ -1,5 +1,6 @@
 package com.iljaproject.shortify.dao.impl;
 
+import com.iljaproject.shortify.constants.UrlDaoSqlQueries;
 import com.iljaproject.shortify.dao.UrlDao;
 import com.iljaproject.shortify.dto.CreateUrlDto;
 import com.iljaproject.shortify.exception.DuplicateShortUrlException;
@@ -31,13 +32,9 @@ public class UrlDaoImpl implements UrlDao {
 
     @Override
     public void createUrl(CreateUrlDto urlDto) {
-        String sql = """
-                INSERT INTO urls (original_url, short_code, created_at)
-                VALUES(?, ?, ?)
-                """;
         try {
             int rows = jdbcTemplate.update(
-                    sql,
+                    UrlDaoSqlQueries.CREATE_URL_SQL_QUERY,
                     urlDto.originalUrl(),
                     urlDto.shortCode(),
                     LocalDateTime.now()
@@ -57,9 +54,8 @@ public class UrlDaoImpl implements UrlDao {
 
     @Override
     public List<Url> getUrls() {
-        String sql = "SELECT * FROM urls";
         try {
-            return jdbcTemplate.query(sql, urlRowMapper);
+            return jdbcTemplate.query(UrlDaoSqlQueries.GET_URLS_SQL_QUERY, urlRowMapper);
         } catch (DataAccessException e) {
             throw new FailedToReadFromDatabaseException("Failed to read all urls data from database", e);
         }

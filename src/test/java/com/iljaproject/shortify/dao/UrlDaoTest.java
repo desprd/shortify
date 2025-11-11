@@ -2,6 +2,7 @@ package com.iljaproject.shortify.dao;
 
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
 import com.iljaproject.shortify.dto.CreateUrlDto;
+import com.iljaproject.shortify.exception.DuplicateShortUrlException;
 import com.iljaproject.shortify.model.Url;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -68,4 +70,18 @@ class UrlDaoTest {
         assertEquals(3, updatedUrls.size());
     }
 
+    @Test
+    void urlWithDuplicateShortCode_createUrl_throwDuplicateShortUrlException() {
+        // Given
+        CreateUrlDto urlDto = new CreateUrlDto("https://urlurl.com", "smth");
+
+        // When
+        DuplicateShortUrlException e = assertThrows(
+                DuplicateShortUrlException.class,
+                () -> urlDao.createUrl(urlDto)
+        );
+
+        // Then
+        assertEquals("Short code already exists: smth", e.getMessage());
+    }
 }
