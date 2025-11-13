@@ -12,4 +12,9 @@ public class UrlDaoSqlQueries {
             WHERE id = ?
             LIMIT 1;
             """;
+    public static final String GET_URL_BY_ORIGINAL_URL_SQL_QUERY = """
+            SELECT * FROM urls
+            WHERE original_url = ?
+            LIMIT 1;
+            """;
 }

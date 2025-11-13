@@ -104,6 +104,24 @@ class UrlDaoTest {
 
         // Then
         assertTrue(fetchedUrl.isEmpty());
+    }
 
+    @Test
+    void correctOriginalUrl_getUrlByOriginalUrl_returnExpectedUrl() {
+        // Given / When
+        Optional<Url> fetchedUrl = urlDao.getUrlByOriginalUrl("https://example.com");
+
+        // Then
+        assertTrue(fetchedUrl.isPresent());
+        assertEquals(first, fetchedUrl.get());
+    }
+
+    @Test
+    void nonExistingOriginalUrl_getUrlByOriginalUrl_returnOptionalEmpty() {
+        // Given / When
+        Optional<Url> fetchedUrl = urlDao.getUrlByOriginalUrl("https://nonexisting.com");
+
+        // Then
+        assertTrue(fetchedUrl.isEmpty());
     }
 }

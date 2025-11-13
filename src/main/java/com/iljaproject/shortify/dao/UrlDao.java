@@ -13,4 +13,6 @@ public interface UrlDao {
     Optional<Url> getUrlById(Long id);
 
     List<Url> getUrls();
+
+    Optional<Url> getUrlByOriginalUrl(String originalUrl);
 }

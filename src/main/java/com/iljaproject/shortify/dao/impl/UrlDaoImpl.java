@@ -72,4 +72,20 @@ public class UrlDaoImpl implements UrlDao {
             throw new FailedToReadFromDatabaseException("Failed to read all urls data from database", e);
         }
     }
+
+    @Override
+    public Optional<Url> getUrlByOriginalUrl(String originalUrl) {
+        try {
+            Url fetchedUrl = jdbcTemplate.queryForObject(
+                    UrlDaoSqlQueries.GET_URL_BY_ORIGINAL_URL_SQL_QUERY,
+                    urlRowMapper,
+                    originalUrl
+            );
+            return Optional.ofNullable(fetchedUrl);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        } catch (DataAccessException e) {
+            throw new FailedToReadFromDatabaseException("Failed to read url by original url " + originalUrl, e);
+        }
+    }
 }
