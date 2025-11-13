@@ -1,6 +1,6 @@
 package com.iljaproject.shortify.constants;
 
-public class UrlDaoSqlQueries {
+public final class UrlDaoSqlQueries {
     private UrlDaoSqlQueries() {};
     public static final String GET_URLS_SQL_QUERY = "SELECT * FROM urls";
     public static final String CREATE_URL_SQL_QUERY = """
