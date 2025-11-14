@@ -1,16 +1,20 @@
 package com.iljaproject.shortify.dao;
 
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
-import com.iljaproject.shortify.dto.CreateUrlDto;
 import com.iljaproject.shortify.exception.DuplicateShortUrlException;
 import com.iljaproject.shortify.model.Url;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,9 @@ class UrlDaoTest {
     private UrlDaoImpl urlDao;
     private List<Url> expectedUrls;
     private Url first;
+    @Autowired
+    private JdbcTemplate template;
+
 
     @BeforeEach
     void setUp() {
@@ -61,30 +68,17 @@ class UrlDaoTest {
     }
 
     @Test
-    void url_createUrl_testDbWithInsertedUrl() {
+    void originalUrl_insertOriginalUrl_insertedUrlId() {
         // Given
-        CreateUrlDto urlDto = new CreateUrlDto("https://longurl.com", "short");
+        String originalUrl = "https://longurl.com";
 
         // When
-        urlDao.createUrl(urlDto);
-        List<Url> updatedUrls = urlDao.getUrls();
-        assertEquals(3, updatedUrls.size());
-    }
-
-    @Test
-    void urlWithDuplicateShortCode_createUrl_throwDuplicateShortUrlException() {
-        // Given
-        CreateUrlDto urlDto = new CreateUrlDto("https://urlurl.com", "smth");
-
-        // When
-        DuplicateShortUrlException e = assertThrows(
-                DuplicateShortUrlException.class,
-                () -> urlDao.createUrl(urlDto)
-        );
+        Long id = urlDao.insertOriginalUrl(originalUrl);
 
         // Then
-        assertEquals("Short code already exists: smth", e.getMessage());
+        assertEquals(3, id);
     }
+
 
     @Test
     void correctId_getById_returnExpectedUrl() {
@@ -124,4 +118,5 @@ class UrlDaoTest {
         // Then
         assertTrue(fetchedUrl.isEmpty());
     }
+
 }

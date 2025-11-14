@@ -1,6 +1,5 @@
 package com.iljaproject.shortify.dao;
 
-import com.iljaproject.shortify.dto.CreateUrlDto;
 import com.iljaproject.shortify.model.Url;
 
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.Optional;
 
 public interface UrlDao {
 
-    void createUrl(CreateUrlDto urlDto);
+    Long insertOriginalUrl(String originalUrl);
 
     Optional<Url> getUrlById(Long id);
 
