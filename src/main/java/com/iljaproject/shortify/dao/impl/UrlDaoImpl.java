@@ -2,6 +2,7 @@ package com.iljaproject.shortify.dao.impl;
 
 import com.iljaproject.shortify.constants.UrlDaoSqlQueries;
 import com.iljaproject.shortify.dao.UrlDao;
+import com.iljaproject.shortify.exception.DuplicateShortUrlException;
 import com.iljaproject.shortify.exception.FailedToCreateUrlException;
 import com.iljaproject.shortify.exception.FailedToReadFromDatabaseException;
 import com.iljaproject.shortify.mapper.UrlRowMapper;
@@ -9,6 +10,7 @@ import com.iljaproject.shortify.model.Url;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,6 +52,22 @@ public class UrlDaoImpl implements UrlDao {
             return keyHolder.getKey().longValue();
         } catch (DataAccessException e) {
             throw new FailedToCreateUrlException("Failed to insert URL into database", e);
+        }
+    }
+
+    @Override
+    public void setShortCode(String shortCode, Long id) {
+        try {
+            jdbcTemplate.update(
+                    UrlDaoSqlQueries.UPDATE_URL_WITH_SHORT_CODE_SQL_QUERY,
+                    shortCode,
+                    id
+            );
+            logger.info("Short code {} inserted in database", shortCode);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateShortUrlException("Short code " + shortCode + " already exists in a database");
+        } catch (DataAccessException e) {
+            throw new FailedToCreateUrlException("Failed to insert short code into database", e);
         }
     }
 

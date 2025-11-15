@@ -8,13 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +46,7 @@ class UrlDaoTest {
         Url second = new Url(
                 2L,
                 "https://something.com",
-                "smth",
+                null,
                 LocalDateTime.of(2025, 12, 25, 10, 30, 0),
                 LocalDateTime.of(2025, 12, 25, 10, 30, 0),
                 0L
@@ -74,9 +70,13 @@ class UrlDaoTest {
 
         // When
         Long id = urlDao.insertOriginalUrl(originalUrl);
+        Url fetchedUrl = urlDao.getUrlById(id).get();
 
         // Then
         assertEquals(3, id);
+        assertEquals(3, fetchedUrl.id());
+        assertEquals(originalUrl, fetchedUrl.originalUrl());
+        assertNull(fetchedUrl.shortCode());
     }
 
 
@@ -117,6 +117,34 @@ class UrlDaoTest {
 
         // Then
         assertTrue(fetchedUrl.isEmpty());
+    }
+
+    @Test
+    void uniqueShortCode_setShortCode_urlWithShortCode() {
+        // Given
+        String shortCode = "smth";
+
+        // When
+        urlDao.setShortCode(shortCode, 2L);
+        Url secondUrl = urlDao.getUrlById(2L).get();
+
+        // Then
+        assertEquals("smth", secondUrl.shortCode());
+    }
+
+    @Test
+    void nonUniqueShortCode_setShortCode_throwKeyAlreadyExistsException() {
+        // Given
+        String shortCode = "exmpl";
+
+        // When
+        Throwable e = assertThrows(
+                DuplicateShortUrlException.class,
+                () -> urlDao.setShortCode(shortCode, 2L)
+        );
+
+        // Then
+        assertEquals("Short code exmpl already exists in a database", e.getMessage());
     }
 
 }

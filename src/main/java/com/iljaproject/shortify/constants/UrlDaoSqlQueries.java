@@ -17,4 +17,9 @@ public final class UrlDaoSqlQueries {
             WHERE original_url = ?
             LIMIT 1;
             """;
+    public static final String UPDATE_URL_WITH_SHORT_CODE_SQL_QUERY = """
+            UPDATE urls
+            SET short_code = ?
+            WHERE id = ?
+            """;
 }
