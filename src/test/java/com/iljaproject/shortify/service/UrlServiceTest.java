@@ -3,10 +3,7 @@ package com.iljaproject.shortify.service;
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

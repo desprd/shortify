@@ -20,7 +20,7 @@ public class UrlServiceImpl implements UrlService {
     private final Logger logger = LoggerFactory.getLogger(UrlServiceImpl.class);
 
     public UrlServiceImpl(UrlDao urlDao,
-                          @Value("${spring.url.root:https://short.ly/}") String rootUrl) {
+                          @Value("${spring.url.root:http://localhost:8080/}") String rootUrl) {
         this.urlDao = urlDao;
         this.rootUrl = rootUrl;
     }
