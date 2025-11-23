@@ -1,5 +1,7 @@
 package com.iljaproject.shortify.service;
 
+import com.iljaproject.shortify.dto.GenerateShortUrlDto;
+
 public interface UrlService {
-    String generateShortUrl(String originalUrl);
+    GenerateShortUrlDto generateShortUrl(String originalUrl);
 }

@@ -1,6 +1,6 @@
 package com.iljaproject.shortify.controller;
 
-import com.iljaproject.shortify.dto.ShortUrlDto;
+import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ class ApiControllerTest {
     @MockitoBean
     private UrlServiceImpl urlService;
 
-    private final String shortUrl = "shrt.com/ex";
+    private final GenerateShortUrlDto shortUrl = new GenerateShortUrlDto("shrt.com/ex", false);
 
     @Test
     void createShortLinkDto_mockCreateShortLink_return200AndResponseDtoWithShortUrl() throws Exception {
@@ -39,6 +39,6 @@ class ApiControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.statusCode").value(201))
                 .andExpect(jsonPath("$.message").exists())
-                .andExpect(jsonPath("$.data.shortUrl").value(shortUrl));
+                .andExpect(jsonPath("$.data.shortUrl").value(shortUrl.shortUrl()));
     }
 }

@@ -1,6 +1,7 @@
 package com.iljaproject.shortify.service;
 
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
+import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -35,10 +36,10 @@ public class UrlServiceTest {
         when(urlDao.getUrlByOriginalUrl(originalUrl)).thenReturn(Optional.empty());
         when(urlDao.insertOriginalUrl(originalUrl)).thenReturn(id);
         doNothing().when(urlDao).setShortCode(anyString(), anyLong());
-        String shortUrl = urlService.generateShortUrl(originalUrl);
+        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(originalUrl);
 
         // Then
-        assertEquals(expectedUrl, shortUrl);
+        assertEquals(expectedUrl, generatedShortUrl.shortUrl());
     }
 
     @Test
@@ -55,9 +56,9 @@ public class UrlServiceTest {
 
         // When
         when(urlDao.getUrlByOriginalUrl(originalUrl)).thenReturn(Optional.of(expectedUrl));
-        String shortUrl = urlService.generateShortUrl(originalUrl);
+        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(originalUrl);
 
         //Then
-        assertEquals(rootUrl + expectedUrl.shortCode(), shortUrl);
+        assertEquals(rootUrl + expectedUrl.shortCode(), generatedShortUrl.shortUrl());
     }
 }

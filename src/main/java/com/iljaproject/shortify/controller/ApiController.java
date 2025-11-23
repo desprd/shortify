@@ -1,6 +1,7 @@
 package com.iljaproject.shortify.controller;
 
 import com.iljaproject.shortify.dto.CreateShortLinkDto;
+import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.dto.ResponseDto;
 import com.iljaproject.shortify.dto.ShortUrlDto;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
@@ -24,10 +25,16 @@ public class ApiController {
     public ResponseEntity<ResponseDto<ShortUrlDto>> createShortLink(
             @RequestBody CreateShortLinkDto createShortLinkDto
     ) {
-        String shortUrl = urlService.generateShortUrl(createShortLinkDto.originalUrl());
+        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(createShortLinkDto.originalUrl());
+        if (generatedShortUrl.existedBefore()) {
+            return ResponseDto.ok(
+                    "Original link already exists in a database",
+                    new ShortUrlDto(generatedShortUrl.shortUrl())
+            );
+        }
         return ResponseDto.created(
                 "Original link was shortened successfully",
-                new ShortUrlDto(shortUrl)
+                new ShortUrlDto(generatedShortUrl.shortUrl())
         );
     }
 }
