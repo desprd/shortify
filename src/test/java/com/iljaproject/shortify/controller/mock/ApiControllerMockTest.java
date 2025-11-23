@@ -1,4 +1,4 @@
-package com.iljaproject.shortify.controller;
+package com.iljaproject.shortify.controller.mock;
 
 import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ApiControllerTest {
+class ApiControllerMockTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -28,7 +28,7 @@ class ApiControllerTest {
     private final GenerateShortUrlDto shortUrl = new GenerateShortUrlDto("shrt.com/ex", false);
 
     @Test
-    void createShortLinkDto_mockCreateShortLink_return200AndResponseDtoWithShortUrl() throws Exception {
+    void createShortLinkDto_mockCreateShortLink_return201AndResponseDtoWithShortUrl() throws Exception {
         when(urlService.generateShortUrl(anyString())).thenReturn(shortUrl);
         mockMvc.perform(post("/api/v1/shorten")
                 .contentType(MediaType.APPLICATION_JSON)
