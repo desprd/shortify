@@ -15,10 +15,10 @@ public record ResponseDto<T> (
                 .body(new ResponseDto<>(true, 200, message, data));
     }
 
-    public static <T> ResponseEntity<ResponseDto<T>> error(HttpStatus statusCode, String message) {
+    public static <T> ResponseEntity<ResponseDto<T>> error(HttpStatus statusCode, String message, T data) {
         return ResponseEntity
                 .status(statusCode)
-                .body(new ResponseDto<>(false, statusCode.value(), message, null));
+                .body(new ResponseDto<>(false, statusCode.value(), message, data));
     }
 
     public static <T> ResponseEntity<ResponseDto<T>> created(String message, T data) {

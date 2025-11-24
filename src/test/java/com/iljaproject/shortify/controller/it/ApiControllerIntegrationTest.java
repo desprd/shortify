@@ -36,11 +36,6 @@ class ApiControllerIntegrationTest {
     private final String createMessage = "Original link was shortened successfully";
     private final String okMessage = "Original link already exists in a database";
 
-    @Test
-    void tst() {
-        System.out.println(restTemplate.postForEntity("http://localhost:" + port + "/api/v1/shorten", new CreateShortLinkDto("egegerrg"), ResponseDto.class));
-
-    }
 
     @Test
     void createShortLinkDtoWithNewUrl_createShortLink_return201AndResponseDtoWithShortUrl() {
