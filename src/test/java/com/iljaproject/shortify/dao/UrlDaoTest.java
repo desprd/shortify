@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,6 +62,16 @@ class UrlDaoTest {
 
         // Then
         assertEquals(expectedUrls, fetchedUrls);
+    }
+
+    @Test
+    @Sql(scripts = {"/cleanup-data-test.sql"})
+    void testDbWithNoData_getUrls_returnEmptyList() {
+        // Given / When
+        List<Url> fetchedUrls = urlDao.getUrls();
+
+        // Then
+        assertTrue(fetchedUrls.isEmpty());
     }
 
     @Test

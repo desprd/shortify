@@ -2,6 +2,7 @@ package com.iljaproject.shortify.service;
 
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
 import com.iljaproject.shortify.dto.GenerateShortUrlDto;
+import com.iljaproject.shortify.mapper.UrlMapper;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class UrlServiceTest {
 
     private final UrlDaoImpl urlDao = mock();
 
-    private final UrlServiceImpl urlService = new UrlServiceImpl(urlDao, rootUrl);
+    private final UrlServiceImpl urlService = new UrlServiceImpl(urlDao, rootUrl, new UrlMapper());
 
     private final String expectedUrl = rootUrl + "1";
 

@@ -1,15 +1,11 @@
 package com.iljaproject.shortify.controller;
 
-import com.iljaproject.shortify.dto.CreateShortLinkDto;
-import com.iljaproject.shortify.dto.GenerateShortUrlDto;
-import com.iljaproject.shortify.dto.ResponseDto;
-import com.iljaproject.shortify.dto.ShortUrlDto;
+import com.iljaproject.shortify.dto.*;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -37,4 +33,20 @@ public class ApiController {
                 new ShortUrlDto(generatedShortUrl.shortUrl())
         );
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<ResponseDto<List<UrlDto>>> getAllUrls() {
+        List<UrlDto> allUrls = urlService.getAllUrls();
+        if (allUrls.isEmpty()) {
+            return ResponseDto.ok(
+                    "No urls in database",
+                    allUrls
+            );
+        }
+        return ResponseDto.ok(
+                "All urls fetched successfully",
+                allUrls
+        );
+    }
+
 }
