@@ -3,7 +3,6 @@ package com.iljaproject.shortify.service.impl;
 import com.iljaproject.shortify.dao.UrlDao;
 import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.dto.UrlDto;
-import com.iljaproject.shortify.mapper.BaseMapper;
 import com.iljaproject.shortify.mapper.UrlMapper;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.UrlService;
