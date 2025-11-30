@@ -8,4 +8,5 @@ import java.util.List;
 public interface UrlService {
     GenerateShortUrlDto generateShortUrl(String originalUrl);
     List<UrlDto> getAllUrls();
+    UrlDto getUrlById(Long id);
 }

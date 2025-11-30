@@ -34,6 +34,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UrlNotFoundException.class)
+    public ResponseEntity<ResponseDto<ErrorDto>> urlNotFoundExceptionHandler(Exception exception,
+                                                                             WebRequest webRequest){
+        ErrorDto error = new ErrorDto(
+                webRequest.getDescription(false),
+                exception.getClass().getSimpleName(),
+                LocalDateTime.now()
+        );
+        return ResponseDto.error(HttpStatus.NOT_FOUND, exception.getMessage(), error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<ErrorDto>> generalExceptionHandler(Exception exception,
                                                                WebRequest webRequest){
@@ -44,4 +55,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return ResponseDto.error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), error);
     }
+
 }

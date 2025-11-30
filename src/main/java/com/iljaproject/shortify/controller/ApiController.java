@@ -49,4 +49,13 @@ public class ApiController {
         );
     }
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ResponseDto<UrlDto>> getUrlById(@PathVariable long id) {
+        UrlDto requiredUrl = urlService.getUrlById(id);
+        return ResponseDto.ok(
+                "Url fetched by id successfully",
+                requiredUrl
+        );
+    }
+
 }

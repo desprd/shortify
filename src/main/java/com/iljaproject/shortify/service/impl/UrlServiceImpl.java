@@ -3,6 +3,7 @@ package com.iljaproject.shortify.service.impl;
 import com.iljaproject.shortify.dao.UrlDao;
 import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.dto.UrlDto;
+import com.iljaproject.shortify.exception.UrlNotFoundException;
 import com.iljaproject.shortify.mapper.UrlMapper;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.UrlService;
@@ -53,6 +54,14 @@ public class UrlServiceImpl implements UrlService {
     public List<UrlDto> getAllUrls() {
         List<Url> allUrls = urlDao.getUrls();
         return urlListToUrlDtoList(allUrls);
+    }
+
+    @Override
+    public UrlDto getUrlById(Long id) {
+        Url url = urlDao
+                .getUrlById(id)
+                .orElseThrow(() -> new UrlNotFoundException("Url object with id " + id + " was not found"));
+        return urlMapper.toDto(url);
     }
 
     private List<UrlDto> urlListToUrlDtoList(List<Url> urlList) {
