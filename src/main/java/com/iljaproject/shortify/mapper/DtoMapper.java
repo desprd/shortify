@@ -1,6 +1,5 @@
 package com.iljaproject.shortify.mapper;
 
-public interface BaseMapper<E, D> {
+public interface DtoMapper<E, D> {
     D toDto(E entity);
-    E toEntity(D dto);
 }

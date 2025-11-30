@@ -7,7 +7,6 @@ import com.iljaproject.shortify.mapper.UrlMapper;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,13 +22,13 @@ public class UrlServiceTest {
 
     private final UrlDaoImpl urlDao = mock();
 
-    private final UrlServiceImpl urlService = new UrlServiceImpl(urlDao, rootUrl, new UrlMapper());
+    private final UrlServiceImpl urlService = new UrlServiceImpl(urlDao, rootUrl, new UrlMapper(rootUrl));
 
     private final String expectedUrl = rootUrl + "1";
 
     private final String originalUrl = "https://example.com";
 
-    private final UrlMapper urlMapper = new UrlMapper();
+    private final UrlMapper urlMapper = new UrlMapper(rootUrl);
 
     private final Url exampleUrlFirst = new Url(
             465L,

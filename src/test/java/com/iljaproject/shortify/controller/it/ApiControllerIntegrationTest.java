@@ -43,7 +43,7 @@ class ApiControllerIntegrationTest {
     private final UrlDto exampleUrlDtoFirst = new UrlDto(
             1L,
             "https://example.com",
-            "exmpl",
+            "http://localhost:8080/exmpl",
             LocalDateTime.of(2024, 11, 9, 10, 30, 0),
             LocalDateTime.of(2024, 11, 9, 10, 30, 0),
             0L
@@ -52,7 +52,7 @@ class ApiControllerIntegrationTest {
     private final UrlDto exampleUrlDtoSecond = new UrlDto(
             2L,
             "https://something.com",
-            null,
+            "http://localhost:8080/" + null,
             LocalDateTime.of(2025, 12, 25, 10, 30, 0),
             LocalDateTime.of(2025, 12, 25, 10, 30, 0),
             0L

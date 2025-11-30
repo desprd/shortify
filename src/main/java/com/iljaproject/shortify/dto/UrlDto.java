@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record UrlDto(Long id,
                      String originalUrl,
-                     String shortCode,
+                     String shortUrl,
                      LocalDateTime createdAt,
                      LocalDateTime lastAccessed,
                      Long clickCount) {}
