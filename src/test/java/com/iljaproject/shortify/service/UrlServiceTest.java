@@ -3,6 +3,7 @@ package com.iljaproject.shortify.service;
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
 import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.dto.UrlDto;
+import com.iljaproject.shortify.exception.UrlNotFoundException;
 import com.iljaproject.shortify.mapper.UrlMapper;
 import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -83,6 +85,29 @@ public class UrlServiceTest {
         // Then
         assertEquals(2, fetchedUrls.size());
         assertEquals(urlListToUrlDtoList(List.of(exampleUrlFirst, exampleUrlSecond)), fetchedUrls);
+    }
+
+    @Test
+    void existingUrlId_getUrlById_returnUrlDto() {
+        // Given / When
+        when(urlDao.getUrlById(465L)).thenReturn(Optional.of(exampleUrlFirst));
+        UrlDto fetchedDto = urlService.getUrlById(465L);
+
+        //Then
+        assertEquals(urlMapper.toDto(exampleUrlFirst), fetchedDto);
+    }
+
+    @Test
+    void nonExistingUrlId_getUrlById_throwUrlNotFoundException() {
+        // Given / When
+        when(urlDao.getUrlById(999L)).thenReturn(Optional.empty());
+        Throwable e = assertThrows(
+                UrlNotFoundException.class,
+                () -> urlService.getUrlById(999L)
+        );
+
+        // Then
+        assertEquals("Url object with id 999 was not found", e.getMessage());
     }
 
     private List<UrlDto> urlListToUrlDtoList(List<Url> urlList) {
