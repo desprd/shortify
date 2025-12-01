@@ -16,4 +16,7 @@ public interface UrlDao {
     List<Url> getUrls();
 
     Optional<Url> getUrlByOriginalUrl(String originalUrl);
+
+    void deleteById(Long id);
+
 }

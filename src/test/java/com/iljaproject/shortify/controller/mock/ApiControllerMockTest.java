@@ -4,7 +4,6 @@ import com.iljaproject.shortify.dto.GenerateShortUrlDto;
 import com.iljaproject.shortify.dto.UrlDto;
 import com.iljaproject.shortify.exception.DuplicateShortUrlException;
 import com.iljaproject.shortify.exception.UrlNotFoundException;
-import com.iljaproject.shortify.model.Url;
 import com.iljaproject.shortify.service.impl.UrlServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

@@ -5,6 +5,7 @@ import com.iljaproject.shortify.dao.UrlDao;
 import com.iljaproject.shortify.exception.DuplicateShortUrlException;
 import com.iljaproject.shortify.exception.FailedToCreateUrlException;
 import com.iljaproject.shortify.exception.FailedToReadFromDatabaseException;
+import com.iljaproject.shortify.exception.UrlNotFoundException;
 import com.iljaproject.shortify.mapper.UrlRowMapper;
 import com.iljaproject.shortify.model.Url;
 import org.slf4j.Logger;
@@ -109,6 +110,22 @@ public class UrlDaoImpl implements UrlDao {
             return Optional.empty();
         } catch (DataAccessException e) {
             throw new FailedToReadFromDatabaseException("Failed to read url by original url " + originalUrl, e);
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        try {
+            int rowsAffected = jdbcTemplate.update(
+                UrlDaoSqlQueries.DELETE_URL_BY_ID_SQL_QUERY,
+                id
+            );
+            if (rowsAffected == 0) {
+                throw new UrlNotFoundException("Url with id " + id + " was not found");
+            }
+            logger.info("Url object with id {} was removed", id);
+        } catch (DataAccessException e) {
+            throw new FailedToCreateUrlException("Failed to delete url with id " + id, e);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.iljaproject.shortify.dao;
 
 import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
 import com.iljaproject.shortify.exception.DuplicateShortUrlException;
+import com.iljaproject.shortify.exception.UrlNotFoundException;
 import com.iljaproject.shortify.model.Url;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -155,6 +156,34 @@ class UrlDaoTest {
 
         // Then
         assertEquals("Short code exmpl already exists in a database", e.getMessage());
+    }
+
+    @Test
+    void existingId_deleteById_deletedUrlObject() {
+        // Given
+        Long id = 1L;
+
+        // When
+        urlDao.deleteById(id);
+        Optional<Url> deleteUrl = urlDao.getUrlById(id);
+
+        // Then
+        assertTrue(deleteUrl.isEmpty());
+    }
+
+    @Test
+    void nonExistingId_deleteById_deletedUrlObject() {
+        // Given
+        Long id = 999L;
+
+        // When
+        Throwable e = assertThrows(
+                UrlNotFoundException.class,
+                () -> urlDao.deleteById(id)
+        );
+
+        // Then
+        assertEquals("Url with id 999 was not found", e.getMessage());
     }
 
 }
