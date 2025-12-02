@@ -58,4 +58,9 @@ public class ApiController {
         );
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteUrlById(@PathVariable long id) {
+        urlService.deleteUrlById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

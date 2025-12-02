@@ -18,9 +18,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -117,4 +116,22 @@ class ApiControllerMockTest {
                 .andExpect(jsonPath("$.statusCode").value(404));
     }
 
+    @Test
+    void existingUrlId_mockDeleteUrlById_return204AndNoContent() throws Exception{
+        doNothing().when(urlService).deleteUrlById(465L);
+        mockMvc.perform(delete("/api/v1/delete/465"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void nonExistingUrlId_mockDeleteUrlById_return404AndErrorResponseDto() throws Exception {
+        doThrow(UrlNotFoundException.class).when(urlService).deleteUrlById(465L);
+        mockMvc.perform(delete("/api/v1/delete/465"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.statusCode").value(404));
+    }
+
 }
+
+

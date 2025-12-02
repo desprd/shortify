@@ -1,9 +1,6 @@
 package com.iljaproject.shortify.controller.it;
 
-import com.iljaproject.shortify.dto.CreateShortLinkDto;
-import com.iljaproject.shortify.dto.ResponseDto;
-import com.iljaproject.shortify.dto.ShortUrlDto;
-import com.iljaproject.shortify.dto.UrlDto;
+import com.iljaproject.shortify.dto.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -104,7 +100,7 @@ class ApiControllerIntegrationTest {
     }
 
     @Test
-    void UrlsInDatabase_getAllUrls_return200AndResponseDtoWithListOfUrlDto() {
+    void urlsInDatabase_getAllUrls_return200AndResponseDtoWithListOfUrlDto() {
         // Given / When
         ResponseEntity<ResponseDto<List<UrlDto>>> response =
                 restTemplate.exchange(
@@ -119,6 +115,91 @@ class ApiControllerIntegrationTest {
         assertTrue(response.getBody().success());
         assertEquals("All urls fetched successfully", response.getBody().message());
         assertEquals(List.of(exampleUrlDtoFirst, exampleUrlDtoSecond), response.getBody().data());
+    }
+
+    @Test
+    void existingUrlId_getUrlById_return200AndResponseDtoWithUrlDto() {
+        // Given
+        long id = 1;
+
+        // When
+        ResponseEntity<ResponseDto<UrlDto>> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/get/{id}",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ResponseDto<UrlDto>>() {},
+                id
+        );
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().success());
+        assertEquals("Url fetched by id successfully", response.getBody().message());
+        assertEquals(exampleUrlDtoFirst, response.getBody().data());
+    }
+
+    @Test
+    void nonExistingUrlId_getUrlById_return404AndResponseDtoWithErrorDto() {
+        // Given
+        long id = 999;
+
+        // When
+        ResponseEntity<ResponseDto<ErrorDto>> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/get/{id}",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ResponseDto<ErrorDto>>() {},
+                id
+        );
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertFalse(response.getBody().success());
+        assertEquals(404, response.getBody().statusCode());
+        assertEquals("Url object with id 999 was not found", response.getBody().message());
+        assertEquals("uri=/api/v1/get/999", response.getBody().data().description());
+        assertEquals("UrlNotFoundException", response.getBody().data().exceptionType());
+    }
+
+    @Test
+    void existingUrlId_deleteUrlById_return204AndNoContent() {
+        // Given
+        long id = 1;
+
+        // When
+        ResponseEntity<Void> response = restTemplate.exchange(
+                        "http://localhost:" + port + "/api/v1/delete/{id}",
+                        HttpMethod.DELETE,
+                        null,
+                        new ParameterizedTypeReference<Void>() {},
+                        id
+                );
+
+        // Then
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    void nonExistingUrlId_deleteUrlById_return404AndResponseDtoWithErrorDto() {
+        // Given
+        long id = 999;
+
+        // When
+        ResponseEntity<ResponseDto<ErrorDto>> errorResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/delete/{id}",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<ResponseDto<ErrorDto>>() {},
+                id
+        );
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND, errorResponse.getStatusCode());
+        assertFalse(errorResponse.getBody().success());
+        assertEquals(404, errorResponse.getBody().statusCode());
+        assertEquals("Url with id 999 was not found", errorResponse.getBody().message());
+        assertEquals("uri=/api/v1/delete/999", errorResponse.getBody().data().description());
+        assertEquals("UrlNotFoundException", errorResponse.getBody().data().exceptionType());
     }
 
 }

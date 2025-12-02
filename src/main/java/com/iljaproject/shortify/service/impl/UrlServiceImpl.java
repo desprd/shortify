@@ -64,6 +64,11 @@ public class UrlServiceImpl implements UrlService {
         return urlMapper.toDto(url);
     }
 
+    @Override
+    public void deleteUrlById(Long id) {
+        urlDao.deleteById(id);
+    }
+
     private List<UrlDto> urlListToUrlDtoList(List<Url> urlList) {
         return urlList.stream().map(urlMapper::toDto).toList();
     }

@@ -9,4 +9,5 @@ public interface UrlService {
     GenerateShortUrlDto generateShortUrl(String originalUrl);
     List<UrlDto> getAllUrls();
     UrlDto getUrlById(Long id);
+    void deleteUrlById(Long id);
 }
