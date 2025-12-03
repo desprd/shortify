@@ -185,7 +185,7 @@ class UrlDaoTest {
         // Then
         assertEquals("Url with id 999 was not found", e.getMessage());
     }
-    
+
 
     @Test
     void existingShortCode_getUrlByShortCode_returnUrlObject() {

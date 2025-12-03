@@ -69,6 +69,16 @@ public class UrlServiceImpl implements UrlService {
         urlDao.deleteById(id);
     }
 
+    @Override
+    public UrlDto getUrlByShortCode(String shortCode) {
+        Url url = urlDao
+                .getUrlByShortCode(shortCode)
+                .orElseThrow(() -> new UrlNotFoundException(
+                        "Url object with short code " + shortCode + " was not found")
+                );
+        return urlMapper.toDto(url);
+    }
+
     private List<UrlDto> urlListToUrlDtoList(List<Url> urlList) {
         return urlList.stream().map(urlMapper::toDto).toList();
     }

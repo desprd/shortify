@@ -110,6 +110,37 @@ public class UrlServiceTest {
         assertEquals("Url object with id 999 was not found", e.getMessage());
     }
 
+    @Test
+    void existingUrlShortCode_getUrlByShortCode_returnUrlDto() {
+        // Given
+        String shortCode = "exmpl";
+        UrlDto expectedDto = urlMapper.toDto(exampleUrlFirst);
+
+        // When
+        when(urlDao.getUrlByShortCode(shortCode)).thenReturn(Optional.of(exampleUrlFirst));
+        UrlDto fetchedDto = urlService.getUrlByShortCode(shortCode);
+
+        // Then
+        assertEquals(expectedDto, fetchedDto);
+    }
+
+    @Test
+    void nonExistingUrlShortCode_getUrlByShortCode_throwUrlNotFoundException() {
+        // Given
+        String shortCode = "asd";
+        String expectedMessage = "Url object with short code asd was not found";
+
+        // When
+        when(urlDao.getUrlByShortCode(shortCode)).thenReturn(Optional.empty());
+        Throwable e = assertThrows(
+                UrlNotFoundException.class,
+                () -> urlService.getUrlByShortCode(shortCode)
+        );
+
+        // Then
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
     private List<UrlDto> urlListToUrlDtoList(List<Url> urlList) {
         return urlList.stream().map(urlMapper::toDto).toList();
     }
