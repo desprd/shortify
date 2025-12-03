@@ -185,6 +185,7 @@ class UrlDaoTest {
         // Then
         assertEquals("Url with id 999 was not found", e.getMessage());
     }
+    
 
     @Test
     void existingShortCode_getUrlByShortCode_returnUrlObject() {
@@ -205,13 +206,10 @@ class UrlDaoTest {
         String shortCode = "asdfg";
 
         // When
-        Throwable e = assertThrows(
-                UrlNotFoundException.class,
-                () -> urlDao.getUrlByShortCode(shortCode)
-        );
+        Optional<Url> fetchedUrl = urlDao.getUrlByShortCode(shortCode);
 
         // Then
-        assertEquals("Url with short code asdfg was not found in database", e.getMessage());
+        assertTrue(fetchedUrl.isEmpty());
     }
 
 }

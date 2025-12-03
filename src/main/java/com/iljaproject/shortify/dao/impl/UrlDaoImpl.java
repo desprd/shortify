@@ -136,7 +136,7 @@ public class UrlDaoImpl implements UrlDao {
             );
             return Optional.ofNullable(fetchedUrl);
         } catch (EmptyResultDataAccessException e) {
-            throw new UrlNotFoundException("Url with short code " + shortCode + " was not found in database");
+            return Optional.empty();
         } catch (DataAccessException e) {
             throw new FailedToReadFromDatabaseException("Failed to fetch url with short code " + shortCode, e);
         }
