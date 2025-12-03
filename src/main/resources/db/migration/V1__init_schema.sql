@@ -5,4 +5,4 @@ CREATE TABLE urls(
     created_at TIMESTAMP NOT NULL,
     last_accessed TIMESTAMP,
     click_count BIGINT NOT NULL DEFAULT 0
-)
+);

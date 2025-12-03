@@ -19,4 +19,6 @@ public interface UrlDao {
 
     void deleteById(Long id);
 
+    Optional<Url> getUrlByShortCode(String shortCode);
+
 }

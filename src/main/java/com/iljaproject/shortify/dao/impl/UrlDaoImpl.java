@@ -125,4 +125,20 @@ public class UrlDaoImpl implements UrlDao {
             throw new FailedToDeleteUrlException("Failed to delete url with id " + id, e);
         }
     }
+
+    @Override
+    public Optional<Url> getUrlByShortCode(String shortCode) {
+        try {
+            Url fetchedUrl = jdbcTemplate.queryForObject(
+                    UrlDaoSqlQueries.GET_URL_BY_SHORT_CODE,
+                    urlRowMapper,
+                    shortCode
+            );
+            return Optional.ofNullable(fetchedUrl);
+        } catch (EmptyResultDataAccessException e) {
+            throw new UrlNotFoundException("Url with short code " + shortCode + " was not found in database");
+        } catch (DataAccessException e) {
+            throw new FailedToReadFromDatabaseException("Failed to fetch url with short code " + shortCode, e);
+        }
+    }
 }

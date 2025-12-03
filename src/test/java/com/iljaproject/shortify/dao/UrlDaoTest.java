@@ -172,7 +172,7 @@ class UrlDaoTest {
     }
 
     @Test
-    void nonExistingId_deleteById_deletedUrlObject() {
+    void nonExistingId_deleteById_throwUrlNotFoundException() {
         // Given
         Long id = 999L;
 
@@ -184,6 +184,34 @@ class UrlDaoTest {
 
         // Then
         assertEquals("Url with id 999 was not found", e.getMessage());
+    }
+
+    @Test
+    void existingShortCode_getUrlByShortCode_returnUrlObject() {
+        // Given
+        String shortCode = "exmpl";
+
+        // When
+        Optional<Url> fetchedUrl = urlDao.getUrlByShortCode(shortCode);
+
+        // Then
+        assertTrue(fetchedUrl.isPresent());
+        assertEquals(first, fetchedUrl.get());
+    }
+
+    @Test
+    void nonExistingShortCode_getUrlByShortCode_throwUrlNotFoundException() {
+        // Given
+        String shortCode = "asdfg";
+
+        // When
+        Throwable e = assertThrows(
+                UrlNotFoundException.class,
+                () -> urlDao.getUrlByShortCode(shortCode)
+        );
+
+        // Then
+        assertEquals("Url with short code asdfg was not found in database", e.getMessage());
     }
 
 }

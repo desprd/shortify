@@ -26,4 +26,9 @@ public final class UrlDaoSqlQueries {
             DELETE FROM urls
             WHERE id = ?
             """;
+    public static final String GET_URL_BY_SHORT_CODE = """
+            SELECT * FROM urls
+            WHERE short_code = ?
+            LIMIT 1
+            """;
 }
