@@ -38,7 +38,7 @@ class ApiControllerIntegrationTest {
 
     private final UrlDto exampleUrlDtoFirst = new UrlDto(
             1L,
-            "https://example.com",
+            "https://pl.wikipedia.org/wiki/Java",
             "http://localhost:8080/exmpl",
             LocalDateTime.of(2024, 11, 9, 10, 30, 0),
             LocalDateTime.of(2024, 11, 9, 10, 30, 0),
@@ -47,7 +47,7 @@ class ApiControllerIntegrationTest {
 
     private final UrlDto exampleUrlDtoSecond = new UrlDto(
             2L,
-            "https://something.com",
+            "https://en.wikipedia.org/wiki/Computer",
             "http://localhost:8080/" + null,
             LocalDateTime.of(2025, 12, 25, 10, 30, 0),
             LocalDateTime.of(2025, 12, 25, 10, 30, 0),
@@ -74,13 +74,13 @@ class ApiControllerIntegrationTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertTrue(response.getBody().success());
         assertEquals(createMessage, response.getBody().message());
-        assertEquals(expectedResponse, response.getBody().data()); // now works!
+        assertEquals(expectedResponse, response.getBody().data());
     }
 
     @Test
     void shortUrlDtoWithExistingUrl_createShortLink_return200AndResponseDtoWithShortUrl() {
         // Given
-        CreateShortLinkDto request = new CreateShortLinkDto("https://example.com");
+        CreateShortLinkDto request = new CreateShortLinkDto("https://pl.wikipedia.org/wiki/Java");
         ShortUrlDto expectedResponse = new ShortUrlDto("http://localhost:8080/exmpl");
 
         // When

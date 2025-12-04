@@ -38,7 +38,7 @@ class UrlDaoTest {
     void setUp() {
         first = new Url(
                 1L,
-                "https://example.com",
+                "https://pl.wikipedia.org/wiki/Java",
                 "exmpl",
                 LocalDateTime.of(2024, 11, 9, 10, 30, 0),
                 LocalDateTime.of(2024, 11, 9, 10, 30, 0),
@@ -46,7 +46,7 @@ class UrlDaoTest {
         );
         Url second = new Url(
                 2L,
-                "https://something.com",
+                "https://en.wikipedia.org/wiki/Computer",
                 null,
                 LocalDateTime.of(2025, 12, 25, 10, 30, 0),
                 LocalDateTime.of(2025, 12, 25, 10, 30, 0),
@@ -114,7 +114,7 @@ class UrlDaoTest {
     @Test
     void correctOriginalUrl_getUrlByOriginalUrl_returnExpectedUrl() {
         // Given / When
-        Optional<Url> fetchedUrl = urlDao.getUrlByOriginalUrl("https://example.com");
+        Optional<Url> fetchedUrl = urlDao.getUrlByOriginalUrl("https://pl.wikipedia.org/wiki/Java");
 
         // Then
         assertTrue(fetchedUrl.isPresent());

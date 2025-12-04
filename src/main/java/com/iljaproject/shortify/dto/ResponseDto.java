@@ -26,4 +26,5 @@ public record ResponseDto<T> (
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(true, 201, message, data));
     }
+
 }
