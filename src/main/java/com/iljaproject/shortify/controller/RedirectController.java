@@ -13,7 +13,7 @@ import java.net.URI;
 
 
 @RestController
-public class RedirectController {
+    public class RedirectController {
 
     private final UrlService service;
 

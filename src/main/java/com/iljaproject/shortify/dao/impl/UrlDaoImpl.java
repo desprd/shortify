@@ -11,12 +11,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,21 +31,20 @@ public class UrlDaoImpl implements UrlDao {
     @Override
     public Long insertOriginalUrl(String originalUrl) {
         try {
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(
-                        UrlDaoSqlQueries.CREATE_URL_SQL_QUERY,
-                        Statement.RETURN_GENERATED_KEYS
-                );
-                ps.setString(1, originalUrl);
-                ps.setString(2, null);
-                ps.setObject(3, LocalDateTime.now());
-                return ps;
-            }, keyHolder);
+            Long id = jdbcTemplate.queryForObject(
+                    UrlDaoSqlQueries.CREATE_URL_SQL_QUERY,
+                    Long.class,
+                    originalUrl,
+                    null,
+                    LocalDateTime.now()
+            );
+            if (id == null) {
+                throw new FailedToCreateUrlException("Failed to insert URL into database ");
+            }
             logger.info("Original url {} inserted in database", originalUrl);
-            return keyHolder.getKey().longValue();
+            return id;
         } catch (DataAccessException e) {
-            throw new FailedToCreateUrlException("Failed to insert URL into database", e);
+            throw new FailedToCreateUrlException("Failed to insert URL into database ", e);
         }
     }
 
@@ -130,8 +125,9 @@ public class UrlDaoImpl implements UrlDao {
     public Optional<Url> getUrlByShortCode(String shortCode) {
         try {
             Url fetchedUrl = jdbcTemplate.queryForObject(
-                    UrlDaoSqlQueries.GET_URL_BY_SHORT_CODE,
+                    UrlDaoSqlQueries.GET_URL_BY_SHORT_CODE_INCREASE_ClICK_COUNT_SET_LAST_ACCESSED,
                     urlRowMapper,
+                    LocalDateTime.now(),
                     shortCode
             );
             return Optional.ofNullable(fetchedUrl);
@@ -141,4 +137,5 @@ public class UrlDaoImpl implements UrlDao {
             throw new FailedToReadFromDatabaseException("Failed to fetch url with short code " + shortCode, e);
         }
     }
+
 }

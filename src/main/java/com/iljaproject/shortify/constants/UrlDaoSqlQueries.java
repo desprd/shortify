@@ -6,6 +6,7 @@ public final class UrlDaoSqlQueries {
     public static final String CREATE_URL_SQL_QUERY = """
                 INSERT INTO urls (original_url, short_code, created_at)
                 VALUES(?, ?, ?)
+                RETURNING id;
                 """;
     public static final String GET_URL_BY_ID_SQL_QUERY = """
             SELECT * FROM urls
@@ -26,9 +27,11 @@ public final class UrlDaoSqlQueries {
             DELETE FROM urls
             WHERE id = ?
             """;
-    public static final String GET_URL_BY_SHORT_CODE = """
-            SELECT * FROM urls
+    public static final String GET_URL_BY_SHORT_CODE_INCREASE_ClICK_COUNT_SET_LAST_ACCESSED = """
+            UPDATE urls
+            SET click_count = click_count + 1,
+                last_accessed = ?
             WHERE short_code = ?
-            LIMIT 1
+            RETURNING *;
             """;
 }
