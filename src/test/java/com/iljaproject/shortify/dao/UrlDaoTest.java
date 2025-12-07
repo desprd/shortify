@@ -4,13 +4,18 @@ import com.iljaproject.shortify.dao.impl.UrlDaoImpl;
 import com.iljaproject.shortify.exception.DuplicateShortUrlException;
 import com.iljaproject.shortify.exception.UrlNotFoundException;
 import com.iljaproject.shortify.model.Url;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +37,25 @@ class UrlDaoTest {
     private Url first;
     @Autowired
     private JdbcTemplate template;
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+
+    @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
 
     @BeforeEach
@@ -197,7 +221,12 @@ class UrlDaoTest {
 
         // Then
         assertTrue(fetchedUrl.isPresent());
-        assertEquals(first, fetchedUrl.get());
+        Url actualUrl = fetchedUrl.get();
+        assertEquals(first.id(), actualUrl.id());
+        assertEquals(first.originalUrl(), actualUrl.originalUrl());
+        assertEquals(first.shortCode(), actualUrl.shortCode());
+        assertEquals(first.createdAt(), actualUrl.createdAt());
+        assertEquals(1, actualUrl.clickCount());
     }
 
     @Test

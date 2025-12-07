@@ -3,13 +3,5 @@ server:
 spring:
   application:
     name: shortify
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-  h2:
-    console:
-      enabled: true
   url:
     root: http://localhost:8080/
