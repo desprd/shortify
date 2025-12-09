@@ -1,3 +1,5 @@
 package com.iljaproject.shortify.dto;
 
-public record CreateShortLinkDto(String originalUrl) {}
+import jakarta.annotation.Nullable;
+
+public record CreateShortLinkDto(String originalUrl, @Nullable String customCode) { }

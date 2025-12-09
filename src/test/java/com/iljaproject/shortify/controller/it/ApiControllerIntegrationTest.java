@@ -81,7 +81,7 @@ class ApiControllerIntegrationTest {
     @Test
     void shortUrlDtoWithNewUrl_createShortLink_return201AndResponseDtoWithShortUrl() {
         // Given
-        CreateShortLinkDto request = new CreateShortLinkDto("http://something");
+        CreateShortLinkDto request = new CreateShortLinkDto("http://something", null);
         ShortUrlDto expectedResponse = new ShortUrlDto("http://localhost:8080/3");
 
         // When
@@ -103,7 +103,7 @@ class ApiControllerIntegrationTest {
     @Test
     void shortUrlDtoWithExistingUrl_createShortLink_return200AndResponseDtoWithShortUrl() {
         // Given
-        CreateShortLinkDto request = new CreateShortLinkDto("https://pl.wikipedia.org/wiki/Java");
+        CreateShortLinkDto request = new CreateShortLinkDto("https://pl.wikipedia.org/wiki/Java", null);
         ShortUrlDto expectedResponse = new ShortUrlDto("http://localhost:8080/exmpl");
 
         // When
