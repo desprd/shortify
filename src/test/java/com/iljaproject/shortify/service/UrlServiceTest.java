@@ -28,6 +28,8 @@ public class UrlServiceTest {
 
     private final String expectedUrl = rootUrl + "1";
 
+    private final String expectedCustomUrl = rootUrl + "cstm";
+
     private final String originalUrl = "https://example.com";
 
     private final UrlMapper urlMapper = new UrlMapper(rootUrl);
@@ -60,20 +62,34 @@ public class UrlServiceTest {
         when(urlDao.getUrlByOriginalUrl(originalUrl)).thenReturn(Optional.empty());
         when(urlDao.insertOriginalUrl(originalUrl)).thenReturn(id);
         doNothing().when(urlDao).setShortCode(anyString(), anyLong());
-        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(originalUrl);
+        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(originalUrl, null);
 
         // Then
         assertEquals(expectedUrl, generatedShortUrl.shortUrl());
     }
 
     @Test
-    void alreadyPresentOriginalUrl_generateShortUrl_returnAlreadyExistedShortUrl() {
+    void alreadyPresentOriginalUrl_generateShortUrl_returnAlreadyExistedOriginalUrl() {
         // Given / When
         when(urlDao.getUrlByOriginalUrl(originalUrl)).thenReturn(Optional.of(exampleUrlFirst));
-        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(originalUrl);
+        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(originalUrl, null);
 
         // Then
         assertEquals(rootUrl + exampleUrlFirst.shortCode(), generatedShortUrl.shortUrl());
+    }
+
+    @Test
+    void newOriginalUrlAndCustomShortCode_generateShortUrl_returnShortUrl() {
+        // Given
+        String customCode = "cstm";
+
+        // When
+        when(urlDao.getUrlByOriginalUrl(originalUrl)).thenReturn(Optional.empty());
+        when(urlDao.insertOriginalUrl(originalUrl, customCode)).thenReturn(1L);
+        GenerateShortUrlDto generateShortUrl = urlService.generateShortUrl(originalUrl, customCode);
+
+        // Then
+        assertEquals(expectedCustomUrl, generateShortUrl.shortUrl());
     }
 
     @Test

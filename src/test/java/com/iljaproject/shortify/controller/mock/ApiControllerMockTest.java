@@ -54,7 +54,7 @@ class ApiControllerMockTest {
 
     @Test
     void originalUrl_mockCreateShortLink_return201AndResponseDtoWithShortUrl() throws Exception {
-        when(urlService.generateShortUrl(anyString())).thenReturn(shortUrl);
+        when(urlService.generateShortUrl(anyString(), isNull())).thenReturn(shortUrl);
         mockMvc.perform(post("/api/v1/shorten")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -70,7 +70,7 @@ class ApiControllerMockTest {
     @Test
     void originalUrl_mockCreateShortLinkToThrowDuplicateShortUrlException_return500AndTrowsDuplicateShortUrlException()
             throws Exception {
-        when(urlService.generateShortUrl(anyString())).thenThrow(DuplicateShortUrlException.class);
+        when(urlService.generateShortUrl(anyString(), isNull())).thenThrow(DuplicateShortUrlException.class);
         mockMvc.perform(post("/api/v1/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

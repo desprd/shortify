@@ -21,7 +21,10 @@ public class ApiController {
     public ResponseEntity<ResponseDto<ShortUrlDto>> createShortLink(
             @RequestBody CreateShortLinkDto createShortLinkDto
     ) {
-        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(createShortLinkDto.originalUrl());
+        GenerateShortUrlDto generatedShortUrl = urlService.generateShortUrl(
+                createShortLinkDto.originalUrl(),
+                createShortLinkDto.customCode()
+        );
         if (generatedShortUrl.existedBefore()) {
             return ResponseDto.ok(
                     "Original link already exists in a database",
