@@ -9,6 +9,8 @@ public interface UrlDao {
 
     Long insertOriginalUrl(String originalUrl);
 
+    Long insertOriginalUrl(String originalUrl, String shortCode);
+
     void setShortCode(String shortCode, Long id);
 
     Optional<Url> getUrlById(Long id);

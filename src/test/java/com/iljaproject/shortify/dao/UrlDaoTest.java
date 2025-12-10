@@ -108,12 +108,40 @@ class UrlDaoTest {
         Url fetchedUrl = urlDao.getUrlById(id).get();
 
         // Then
-        assertEquals(3, id);
-        assertEquals(3, fetchedUrl.id());
         assertEquals(originalUrl, fetchedUrl.originalUrl());
         assertNull(fetchedUrl.shortCode());
     }
 
+    @Test
+    void originalUrlAndNonExistingShortCode_insertOriginalUrl_insertedUrlId() {
+        // Given
+        String originalUrl = "https://something.com";
+        String shortCode = "smth";
+
+        // When
+        Long id = urlDao.insertOriginalUrl(originalUrl, shortCode);
+        Url fetchedUrl = urlDao.getUrlById(id).get();
+
+        // Then
+        assertEquals(originalUrl, fetchedUrl.originalUrl());
+        assertEquals(shortCode, fetchedUrl.shortCode());
+    }
+
+    @Test
+    void originalUrlAndExistingShortCode_insertOriginalUrl_throwDuplicateShortUrlException() {
+        // Given
+        String originalUrl = "https://something.com";
+        String shortCode = "exmpl";
+
+        // When
+        Throwable e = assertThrows(
+                DuplicateShortUrlException.class,
+                () -> urlDao.insertOriginalUrl(originalUrl, shortCode)
+        );
+
+        // Then
+        assertEquals("Short code exmpl already exists in a database", e.getMessage());
+    }
 
     @Test
     void correctId_getById_returnExpectedUrl() {

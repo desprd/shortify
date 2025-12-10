@@ -31,18 +31,28 @@ public class UrlDaoImpl implements UrlDao {
     @Override
     public Long insertOriginalUrl(String originalUrl) {
         try {
-            Long id = jdbcTemplate.queryForObject(
-                    UrlDaoSqlQueries.CREATE_URL_SQL_QUERY,
-                    Long.class,
-                    originalUrl,
-                    null,
-                    LocalDateTime.now()
-            );
+            Long id = executeCreateUrl(originalUrl, null);
             if (id == null) {
                 throw new FailedToCreateUrlException("Failed to insert URL into database ");
             }
             logger.info("Original url {} inserted in database", originalUrl);
             return id;
+        } catch (DataAccessException e) {
+            throw new FailedToCreateUrlException("Failed to insert URL into database ", e);
+        }
+    }
+
+    @Override
+    public Long insertOriginalUrl(String originalUrl, String shortCode) {
+        try {
+            Long id = executeCreateUrl(originalUrl, shortCode);
+            if (id == null) {
+                throw new FailedToCreateUrlException("Failed to insert URL with custom short code into database ");
+            }
+            logger.info("Original url {} with custom short code {} inserted in database", originalUrl, shortCode);
+            return id;
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateShortUrlException("Short code " + shortCode + " already exists in a database");
         } catch (DataAccessException e) {
             throw new FailedToCreateUrlException("Failed to insert URL into database ", e);
         }
@@ -136,6 +146,16 @@ public class UrlDaoImpl implements UrlDao {
         } catch (DataAccessException e) {
             throw new FailedToReadFromDatabaseException("Failed to fetch url with short code " + shortCode, e);
         }
+    }
+
+    private Long executeCreateUrl(String originalUrl, String shortCode) {
+        return jdbcTemplate.queryForObject(
+                UrlDaoSqlQueries.CREATE_URL_SQL_QUERY,
+                Long.class,
+                originalUrl,
+                shortCode,
+                LocalDateTime.now()
+        );
     }
 
 }
