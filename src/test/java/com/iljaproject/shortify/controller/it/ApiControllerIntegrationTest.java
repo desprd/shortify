@@ -101,6 +101,28 @@ class ApiControllerIntegrationTest {
     }
 
     @Test
+    void shortUrlDtoWithNewUrlAndCustomShortCode_createShortLink_return201AndResponseDtoWithShortUrl() {
+        // Given
+        CreateShortLinkDto request = new CreateShortLinkDto("http://something", "smth");
+        ShortUrlDto expectedResponse = new ShortUrlDto("http://localhost:8080/smth");
+
+        // When
+        ResponseEntity<ResponseDto<ShortUrlDto>> response =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/api/v1/shorten",
+                        HttpMethod.POST,
+                        new HttpEntity<>(request),
+                        new ParameterizedTypeReference<ResponseDto<ShortUrlDto>>() {}
+                );
+
+        // Then
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertTrue(response.getBody().success());
+        assertEquals(createMessage, response.getBody().message());
+        assertEquals(expectedResponse, response.getBody().data());
+    }
+
+    @Test
     void shortUrlDtoWithExistingUrl_createShortLink_return200AndResponseDtoWithShortUrl() {
         // Given
         CreateShortLinkDto request = new CreateShortLinkDto("https://pl.wikipedia.org/wiki/Java", null);
